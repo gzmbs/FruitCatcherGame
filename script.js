@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 
 const startButton = document.getElementById('startButton');
 const restartButton = document.getElementById('restartButton');
+const instructions = document.getElementById('instructions');
 
 // Load basket image
 const basketImg = new Image();
@@ -21,19 +22,19 @@ const fruits = fruitImages.map(src => {
 });
 
 const bowl = {
-    x: canvas.width / 2 - 25,
-    y: canvas.height - 30,
-    width: 50,
-    height: 30,
-    dx: 5,
+    x: canvas.width / 2 - 35, // Increase width to 70
+    y: canvas.height - 50, // Increase height to 50
+    width: 70,
+    height: 50,
+    dx: 7, // Adjust speed for bigger size
     img: basketImg
 };
 
 let fruit = {
-    x: Math.random() * (canvas.width - 20),
+    x: Math.random() * (canvas.width - 30), // Increase width to 30
     y: 0,
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
     dy: 2,
     img: fruits[Math.floor(Math.random() * fruits.length)]
 };
@@ -132,6 +133,7 @@ function keyUpHandler(e) {
 function startGame() {
     startButton.style.display = 'none';
     restartButton.style.display = 'none';
+    instructions.style.display = 'none';
     canvas.style.display = 'block';
     score = 0;
     fruit.dy = 2;
@@ -142,3 +144,4 @@ function startGame() {
 
 startButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', startGame);
+
