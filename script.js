@@ -1,33 +1,53 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+const startButton = document.getElementById('startButton');
+const restartButton = document.getElementById('restartButton');
+
+// Load basket image
+const basketImg = new Image();
+basketImg.src = 'basket.png';
+
+// Load fruit images
+const fruitImages = [
+    'apple.png',
+    'banana.png',
+    'orange.png'
+];
+const fruits = fruitImages.map(src => {
+    const img = new Image();
+    img.src = src;
+    return img;
+});
+
 const bowl = {
     x: canvas.width / 2 - 25,
     y: canvas.height - 30,
     width: 50,
     height: 30,
-    dx: 5
+    dx: 5,
+    img: basketImg
 };
 
-const fruit = {
+let fruit = {
     x: Math.random() * (canvas.width - 20),
     y: 0,
     width: 20,
     height: 20,
-    dy: 2
+    dy: 2,
+    img: fruits[Math.floor(Math.random() * fruits.length)]
 };
 
 let score = 0;
 let gameOver = false;
+let gameStarted = false;
 
 function drawBowl() {
-    ctx.fillStyle = 'brown';
-    ctx.fillRect(bowl.x, bowl.y, bowl.width, bowl.height);
+    ctx.drawImage(bowl.img, bowl.x, bowl.y, bowl.width, bowl.height);
 }
 
 function drawFruit() {
-    ctx.fillStyle = 'red';
-    ctx.fillRect(fruit.x, fruit.y, fruit.width, fruit.height);
+    ctx.drawImage(fruit.img, fruit.x, fruit.y, fruit.width, fruit.height);
 }
 
 function moveBowl() {
@@ -45,8 +65,11 @@ function updateFruit() {
         if (fruit.x > bowl.x && fruit.x < bowl.x + bowl.width) {
             score++;
             resetFruit();
+            fruit.dy += 0.5; // Increase speed of fruits
         } else {
             gameOver = true;
+            gameStarted = false;
+            restartButton.style.display = 'block';
         }
     }
 }
@@ -54,6 +77,7 @@ function updateFruit() {
 function resetFruit() {
     fruit.x = Math.random() * (canvas.width - fruit.width);
     fruit.y = 0;
+    fruit.img = fruits[Math.floor(Math.random() * fruits.length)];
 }
 
 function drawScore() {
@@ -105,4 +129,16 @@ function keyUpHandler(e) {
     }
 }
 
-draw();
+function startGame() {
+    startButton.style.display = 'none';
+    restartButton.style.display = 'none';
+    canvas.style.display = 'block';
+    score = 0;
+    fruit.dy = 2;
+    gameOver = false;
+    gameStarted = true;
+    draw();
+}
+
+startButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', startGame);
